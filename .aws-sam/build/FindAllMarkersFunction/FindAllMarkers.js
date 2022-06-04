@@ -10,9 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
-const MarkerCreator_1 = require("@mapoteca/markers/application/Create/MarkerCreator");
+const MarkersFinder_1 = require("@mapoteca/markers/application/FIndAll/MarkersFinder");
 const DynamoDBMarkerRepository_1 = require("@mapoteca/markers/infrastructure/DynamoDBMarkerRepository");
-const { RESOURCES_TABLE, } = process.env;
+const { RESOURCES_TABLE } = process.env;
 const HEADERS = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Headers": "*",
@@ -20,24 +20,21 @@ const HEADERS = {
     "Access-Control-Allow-Methods": "*"
 };
 const handler = (event, context) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    console.info('==> Find All Markers Handler');
     console.info('EVENT:', event);
     console.info('CONTEXT:', context);
     // Verify existence of enviroment variables
     if (!RESOURCES_TABLE)
-        return { "statusCode": 500 };
-    // Verify existence of id in pathParameters
-    if (!((_a = event === null || event === void 0 ? void 0 : event.pathParameters) === null || _a === void 0 ? void 0 : _a.id))
-        return { "statusCode": 400 };
-    const id = event.pathParameters.id;
-    const body = JSON.parse(event.body ? event.body : '');
-    console.log('body:', body);
-    const request = Object.assign({ id }, body);
+        return {
+            statusCode: 500,
+            headers: HEADERS
+        };
     const repository = new DynamoDBMarkerRepository_1.DynamoDBMarkerRepository(RESOURCES_TABLE);
-    const creator = new MarkerCreator_1.MarkerCreator(repository);
-    yield creator.run(request);
+    const finder = new MarkersFinder_1.MarkersFinder(repository);
+    const marker = yield finder.run();
     return {
-        "statusCode": 201,
+        statusCode: 200,
+        body: JSON.stringify(marker),
         headers: HEADERS
     };
 });

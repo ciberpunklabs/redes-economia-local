@@ -63,4 +63,24 @@ export class DynamoDBMarkerRepository implements MarkerRepository {
 		return Marker.fromPrimitives(marker)
 	}
 
+	async findAll(): Promise<Marker[]> {
+		const params = {
+			TableName: this.tableName,
+			ExpressionAttributeValues: {
+				':markers': `MARKERS`,
+				':marker': `MARKER`
+			},
+			KeyConditionExpression: 'PK = :markers and begins_with(SK, :marker)',
+		}
+
+		console.log('params:', params);
+
+		const dynamoResponse = await dynamo.query(params).promise();
+		console.log("dynamoResponse:", dynamoResponse)
+
+		return dynamoResponse.Items.map((marker: any) => 
+			Marker.fromPrimitives(marker)
+		);
+	}
+
 }

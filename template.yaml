@@ -67,27 +67,27 @@ Resources:
             Path: /markers/{id}
             Method: GET
     
-  # FindAllMarkersFunction:
-  #   Type: 'AWS::Serverless::Function'
-  #   Properties:
-  #     Runtime: nodejs14.x
-  #     CodeUri: dist/src/apps/backend/lambdas/FindAllMarkers
-  #     Handler: FindAllMarkers.handler
-  #     Environment:
-  #       Variables:
-  #         RESOURCES_TABLE: !Ref ResourcesTable
-  #     Layers:
-  #       - !Ref ProducersModule
-  #     Policies:
-  #       - DynamoDBCrudPolicy:
-  #           TableName: !Ref ResourcesTable
-  #     Events:
-  #       GetMarkers:
-  #         Type: Api
-  #         Properties:
-  #           RestApiId: !Ref ResourcesApi
-  #           Path: /markers
-  #           Method: GET
+  FindAllMarkersFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Runtime: nodejs14.x
+      CodeUri: dist/src/apps/backend/lambdas/FindAllMarkers
+      Handler: FindAllMarkers.handler
+      Environment:
+        Variables:
+          RESOURCES_TABLE: !Ref ResourcesTable
+      Layers:
+        - !Ref MarkersModule
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ResourcesTable
+      Events:
+        GetMarkers:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ResourcesApi
+            Path: /markers
+            Method: GET
   
  
   #### Domain and Aplication Modules Layer

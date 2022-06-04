@@ -1,5 +1,5 @@
-import { CreateMarkerRequest } from "@mapoteca/markers/application/Create/CreateMarkerRequest";
 import { MarkerCreator } from "@mapoteca/markers/application/Create/MarkerCreator";
+import { MarkerType } from "@mapoteca/markers/domain/Marker";
 import { DynamoDBMarkerRepository } from "@mapoteca/markers/infrastructure/DynamoDBMarkerRepository";
 
 
@@ -26,13 +26,16 @@ export const handler = async (event: any, context: any) => {
 
 	const id : string = event.pathParameters.id;
 
-	const request : CreateMarkerRequest = JSON.parse(event.body ? event.body : '');
-	console.log('request:', request);
+	const body = JSON.parse(event.body ? event.body : '');
+	console.log('body:', body);
 
+	const request: MarkerType = {
+		id, ...body
+	}
 	const repository = new DynamoDBMarkerRepository(RESOURCES_TABLE);
 	const creator = new MarkerCreator(repository);
 	
-	await creator.run({ id, ...request });
+	await creator.run(request);
 
 	return {
 		"statusCode": 201,

@@ -1,5 +1,14 @@
 import { MarkerPosition, MarkerPositionType } from "./MarkerPosition";
 
+export type MarkerType = {
+	id: string,
+	name: string, 
+	categories: string[],
+	address: string,
+	phoneNumber: string,
+	position: MarkerPositionType,
+}
+
 export class Marker {
 	readonly id: string;
 	readonly name: string;
@@ -8,15 +17,7 @@ export class Marker {
 	readonly phoneNumber: string;
 	readonly position: MarkerPosition;
 
- 	constructor({ id, name, categories, address, phoneNumber, position }: 
-		{ 
-			id: string,
-			name: string, 
-			categories: string[],
-			address: string,
-			phoneNumber: string,
-			position: MarkerPositionType,
-		}) 
+ 	constructor({ id, name, categories, address, phoneNumber, position }: MarkerType) 
 	{
 		this.id = id;
 		this.name = name;
@@ -26,14 +27,7 @@ export class Marker {
 		this.position = new MarkerPosition(position); 
   	}
 
-	static fromPrimitives(plainData: { 
-		id: string,
-		name: string, 
-		categories: string[],
-		address: string,
-		phoneNumber: string,
-		position: MarkerPositionType,
-	}): Marker {
+	static fromPrimitives(plainData: MarkerType): Marker {
 		return new Marker({
 			id: plainData.id, 
 			name: plainData.name,
@@ -44,7 +38,7 @@ export class Marker {
 		});
 	}
 
-	toPrimitives() {
+	toPrimitives(): MarkerType {
 		return {
 			id: this.id,
 			name: this.name,

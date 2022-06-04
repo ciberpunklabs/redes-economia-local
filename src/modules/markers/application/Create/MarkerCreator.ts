@@ -1,5 +1,4 @@
-import { Marker } from "../../domain/Marker";
-import { MarkerPositionType } from "../../domain/MarkerPosition";
+import { Marker, MarkerType } from "../../domain/Marker";
 import { MarkerRepository } from "../../domain/MarkerRepository";
 
 
@@ -10,14 +9,8 @@ export class MarkerCreator {
 		this.repository = repository;
 	}
 
-  	async run(request: {
-		id: string, name: string, categories: string[], 
-		address: string, phoneNumber: string, 
-		position: MarkerPositionType
-	}): Promise<void> {
-    	
+  	async run(request: MarkerType): Promise<void> {
 		const marker = Marker.fromPrimitives(request);
-
     	return this.repository.save(marker);
   	}
 }

@@ -17,4 +17,12 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["FindMarkerFunction"]
 
+[function_build_definitions.70c6197f-ffd6-406a-876a-d5c2e2bbec1c]
+codeuri = "/home/jfollert/Workspace/ciberpunklabs/redes-economia-local/dist/src/apps/backend/lambdas/FindAllMarkers"
+runtime = "nodejs14.x"
+architecture = "x86_64"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["FindAllMarkersFunction"]
+
 [layer_build_definitions]

@@ -64,6 +64,30 @@ Resources:
               Ref: ResourcesApi
             Path: /markers/{id}
             Method: GET
+  FindAllMarkersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      CodeUri: FindAllMarkersFunction
+      Handler: FindAllMarkers.handler
+      Environment:
+        Variables:
+          RESOURCES_TABLE:
+            Ref: ResourcesTable
+      Layers:
+      - Ref: MarkersModule
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ResourcesTable
+      Events:
+        GetMarkers:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ResourcesApi
+            Path: /markers
+            Method: GET
   MarkersModule:
     Type: AWS::Serverless::LayerVersion
     Properties:
