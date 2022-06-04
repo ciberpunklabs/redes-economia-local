@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: Mapoteca
+Parameters:
+  StageName:
+    Type: String
+    Default: dev
+Resources:
+  ResourcesApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: ResourcesApi
+      StageName:
+        Ref: StageName
+      Cors:
+        AllowMethods: '''*'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+  CreateMarkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      CodeUri: CreateMarkerFunction
+      Handler: CreateMarker.handler
+      Environment:
+        Variables:
+          RESOURCES_TABLE:
+            Ref: ResourcesTable
+      Layers:
+      - Ref: MarkersModule
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ResourcesTable
+      Events:
+        PutMarker:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ResourcesApi
+            Path: /markers/{id}
+            Method: PUT
+  FindMarkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      CodeUri: FindMarkerFunction
+      Handler: FindMarker.handler
+      Environment:
+        Variables:
+          RESOURCES_TABLE:
+            Ref: ResourcesTable
+      Layers:
+      - Ref: MarkersModule
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ResourcesTable
+      Events:
+        GetMarker:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ResourcesApi
+            Path: /markers/{id}
+            Method: GET
+  MarkersModule:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName:
+        Fn::Sub: ${AWS::StackName}-modules
+      Description: Markers module library
+      ContentUri: ../../dist/layers/markers
+      CompatibleRuntimes:
+      - nodejs14.x
+      LicenseInfo: MIT
+      RetentionPolicy: Delete
+  ResourcesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: resources-${AWS::StackName}
+      AttributeDefinitions:
+      - AttributeName: PK
+        AttributeType: S
+      - AttributeName: SK
+        AttributeType: S
+      KeySchema:
+      - AttributeName: PK
+        KeyType: HASH
+      - AttributeName: SK
+        KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+Outputs:
+  APIURI:
+    Description: The API REST URI to connect to
+    Value:
+      Fn::Sub: https://${ResourcesApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${StageName}/

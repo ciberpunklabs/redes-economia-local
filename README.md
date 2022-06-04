@@ -1,1 +1,1 @@
-# redes-economia-local
+# Herramienta de Mapeo Comunitario Digital

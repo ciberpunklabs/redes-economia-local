@@ -1,0 +1,29 @@
+{
+  	"compilerOptions": {
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "es6",
+		"noImplicitAny": true,
+		"moduleResolution": "node",
+		"sourceMap": false,
+		"rootDir": ".",
+		"strict": true,
+		"noEmit": false,
+		"resolveJsonModule": true,
+		"noUnusedLocals": true,
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true,
+		"paths": {
+			"@mapoteca/*": ["./src/modules/*"]
+		}
+  	},
+  	"include": [
+    	"src/**/**.ts"
+	],
+  	"exclude": [
+		"node_modules",
+		"modules/"]
+}

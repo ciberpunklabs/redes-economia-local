@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "outDir": "../../../dist/layers/markers/nodejs/node_modules/@mapoteca/markers/"
+    },
+	"include": [
+        "./**/*.ts"
+    ]
+}
