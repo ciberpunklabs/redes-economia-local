@@ -25,4 +25,12 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["FindAllMarkersFunction"]
 
+[function_build_definitions.24e7910b-0f8b-45be-994e-119a07e94c18]
+codeuri = "/home/jfollert/Workspace/ciberpunklabs/redes-economia-local/dist/src/apps/backend/lambdas/RemoveMarker"
+runtime = "nodejs14.x"
+architecture = "x86_64"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["RemoveMarkerFunction"]
+
 [layer_build_definitions]

@@ -1,7 +1,7 @@
-import { Marker } from "../domain/Marker";
+import { Marker, MarkerType } from "../domain/Marker";
 import { MarkerRepository } from "../domain/MarkerRepository";
 
-const AWS = require("aws-sdk");
+import * as AWS from "aws-sdk";
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
 export class DynamoDBMarkerRepository implements MarkerRepository {
@@ -56,11 +56,13 @@ export class DynamoDBMarkerRepository implements MarkerRepository {
 		const dynamoResponse = await dynamo.query(params).promise();
 		console.log("dynamoResponse:", dynamoResponse)
 
-		if (dynamoResponse.Items.length < 1) return null;
+		if (!dynamoResponse.Items) throw new Error("Error Dynamo Response");
+		
+		if (dynamoResponse?.Items.length < 1) return null;
 
-		const marker = dynamoResponse.Items[0];
+		const marker = dynamoResponse?.Items[0];
 
-		return Marker.fromPrimitives(marker)
+		return Marker.fromPrimitives(marker as MarkerType)
 	}
 
 	async findAll(): Promise<Marker[]> {
@@ -78,9 +80,26 @@ export class DynamoDBMarkerRepository implements MarkerRepository {
 		const dynamoResponse = await dynamo.query(params).promise();
 		console.log("dynamoResponse:", dynamoResponse)
 
-		return dynamoResponse.Items.map((marker: any) => 
+		if (!dynamoResponse.Items) throw new Error("Error Dynamo Response");
+
+		return dynamoResponse?.Items.map((marker: any) => 
 			Marker.fromPrimitives(marker)
 		);
+	}
+
+	async remove(id: string): Promise<void> {
+		const params = {
+			TableName: this.tableName,
+			Key: {
+				'PK': `MARKERS`,
+				'SK': `MARKER#${id}`
+			}
+		}
+		console.log('params:', params);
+
+		const dynamoResponse = await dynamo.delete(params).promise();
+		console.log("dynamoResponse:", dynamoResponse)
+	
 	}
 
 }

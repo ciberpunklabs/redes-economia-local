@@ -64,6 +64,30 @@ Resources:
               Ref: ResourcesApi
             Path: /markers/{id}
             Method: GET
+  RemoveMarkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      CodeUri: RemoveMarkerFunction
+      Handler: RemoveMarker.handler
+      Environment:
+        Variables:
+          RESOURCES_TABLE:
+            Ref: ResourcesTable
+      Layers:
+      - Ref: MarkersModule
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: ResourcesTable
+      Events:
+        GetMarker:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ResourcesApi
+            Path: /markers/{id}
+            Method: DELETE
   FindAllMarkersFunction:
     Type: AWS::Serverless::Function
     Properties:
