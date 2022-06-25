@@ -1,0 +1,26 @@
+#map {
+	position: relative;
+	height: 100vh;
+	width: 80vw;
+}
+
+#map .data {
+	position: absolute;
+	left: 0;
+	display: flex;
+	gap: 0.7em;
+	padding: 2em;
+	flex-direction: column;
+	width: auto;
+	z-index: 1;
+	text-align: left;
+	pointer-events: none
+}
+
+#map .data h1 {
+	color: #000;
+  	font-size: 1em;
+  	margin: 0;
+  	padding: 0;
+	width: 100%;
+}
