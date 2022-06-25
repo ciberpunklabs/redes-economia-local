@@ -2,9 +2,15 @@ import OlMap from "ol/Map";
 import OlView from "ol/View";
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
-import { useEffect, useRef,  } from 'react'
-import { toLonLat } from 'ol/proj';
+import { useEffect, useRef } from 'react'
+import { fromLonLat, toLonLat } from 'ol/proj';
 import './Map.css'
+import { Point } from "ol/geom";
+import Feature from "ol/Feature";
+import { Vector as SourceVector } from "ol/source";
+import { Vector as LayerVector } from  'ol/layer';
+import Style from "ol/style/Style";
+import Icon from "ol/style/Icon";
 
 const Map = ({ center, zoom, setCenter, setZoom }) => {
 
@@ -23,6 +29,44 @@ const Map = ({ center, zoom, setCenter, setZoom }) => {
 		}),
 	}));
 
+	const markerGeometry = new Point(fromLonLat([-71.6460682, -33.0501956]));
+
+	const markerFeature = new Feature({
+		geometry: markerGeometry
+	});
+
+	const markerFeature2 = new Feature({
+		geometry: new Point(fromLonLat([-71.640800, -33.0501500]))
+	});
+
+	const markerStyle = new Icon({
+		src: 'https://github.com/openlayers/openlayers/raw/v3.20.1/examples/resources/logo-70x70.png',
+		scale: 0.4
+	});
+	
+	markerFeature.setStyle(new Style({
+		image: markerStyle,
+	}));
+
+	markerFeature2.setStyle(new Style({
+		image: new Icon({
+			src: 'https://github.com/openlayers/openlayers/raw/v3.20.1/examples/resources/logo-70x70.png',
+			scale: 0.4
+		})
+	}));
+	
+
+	const vectorSource = new SourceVector({
+		features: [markerFeature, markerFeature2]
+	});
+	
+	const markerLayer = new LayerVector({
+		title: "RoutePoint",
+		visible: true,
+		source: vectorSource
+	});
+
+	map.current.addLayer(markerLayer);
 
 	useEffect(() => {
 		map.current.setTarget("map")
