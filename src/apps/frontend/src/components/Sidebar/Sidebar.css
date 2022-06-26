@@ -18,6 +18,7 @@
 	display: flex;
 	flex-direction: column;
 	font-size: 1rem;
+	overflow: hidden;
 }
 
 .sidebar ul li {
@@ -31,5 +32,24 @@
 
 .sidebar ul li:hover{
 	background-color: rgba(0, 0, 0, 0.10);
+	cursor: pointer;
+}
+
+.sidebar button{
+	margin: 0;
+	padding: 0;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+	font-size: 1rem;
+	font-weight: bold;
+	color: rgb(170, 187, 204);
+	min-height: 3rem;
+	width: 100%;
+	bottom: 0;
+	background-color: rgb(14, 8, 27);
+}
+
+.sidebar button:hover{
 	cursor: pointer;
 }

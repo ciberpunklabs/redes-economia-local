@@ -4,6 +4,12 @@ import OlView from "ol/View";
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat } from "ol/proj";
+import { Point } from "ol/geom";
+import Feature from "ol/Feature";
+import { Vector as SourceVector } from "ol/source";
+import { Vector as LayerVector } from  'ol/layer';
+import Style from "ol/style/Style";
+import Icon from "ol/style/Icon";
 
 const MapContext = createContext();
 export const MapProvider = ({ children }) => {
@@ -27,6 +33,40 @@ export const MapProvider = ({ children }) => {
 
 	const moveTo = ([lon, lat]) => {
 		setCenter(fromLonLat([lon, lat]));
+	}
+
+	const setZoomLevel = (zoomLevel) => {
+		setZoom(zoomLevel);
+	}
+
+	const addMarker = () => {
+		console.log("addMarker");
+		const markerGeometry = new Point(center);
+
+		const markerFeature = new Feature({
+			geometry: markerGeometry
+		});
+
+		const markerStyle = new Icon({
+			src: 'https://github.com/openlayers/openlayers/raw/v3.20.1/examples/resources/logo-70x70.png',
+			scale: 0.4
+		});
+		
+		markerFeature.setStyle(new Style({
+			image: markerStyle,
+		}));
+
+		const vectorSource = new SourceVector({
+			features: [markerFeature]
+		});
+		
+		const markerLayer = new LayerVector({
+			title: "RoutePoint",
+			visible: true,
+			source: vectorSource
+		});
+
+		map.current.addLayer(markerLayer);
 	}
 
 	useEffect(() => {
@@ -56,7 +96,10 @@ export const MapProvider = ({ children }) => {
 	}, [zoom])
 	
 
-	const value = { center, zoom, moveTo }
+	const value = { 
+		center, zoom, 
+		moveTo, setZoomLevel, addMarker
+	}
 
 	return (
 		<MapContext.Provider value={value}>
