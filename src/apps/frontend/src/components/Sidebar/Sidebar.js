@@ -6,7 +6,12 @@ const Sidebar = () => {
 	const { moveTo, addMarker } = useMap();
 	return (
 		<div className='sidebar'>
-			<h2>MARCADORES</h2>
+			<div className='user'>
+				<img src='https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200' alt='user'/>
+				<h3>User</h3>
+			</div>
+
+			<h2>Ciudades</h2>
 			<ul>
 				{
 					Object.keys(cityToCoordinates).map((city, index) => {
